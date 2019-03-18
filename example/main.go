@@ -11,7 +11,7 @@ func main() {
 	if len(os.Args) != 2 {
 		panic("main:Must have a parameter.")
 	}
-	p, err := NewPluginLoader(os.Args[1])
+	p, err := pluginloader.NewPluginLoader(os.Args[1])
 	if err != nil {
 		panic(err)
 	}
