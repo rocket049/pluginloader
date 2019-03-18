@@ -1,6 +1,7 @@
 package pluginloader
 
 import (
+	"errors"
 	"plugin"
 	"reflect"
 )
@@ -24,11 +25,16 @@ func (p *PluginLoader) Call(funcName string, p0 ...interface{}) (interface{}, er
 	res := f1.Call(param)
 	if res == nil {
 		return nil, nil
-	}
-	if res[1].Interface() != nil {
-		return res[0].Interface(), res[1].Interface().(error)
-	} else {
+	} else if len(res) == 2 {
+		if res[1].Interface() != nil {
+			return res[0].Interface(), res[1].Interface().(error)
+		} else {
+			return res[0].Interface(), nil
+		}
+	} else if len(res) == 1 {
 		return res[0].Interface(), nil
+	} else {
+		return nil, errors.New(funcName + ": Return value format error.")
 	}
 }
 
