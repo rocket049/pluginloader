@@ -16,8 +16,9 @@ func (p *PluginLoader) Call(funcName string, p0 ...interface{}) (interface{}, er
 		return nil, err
 	}
 	f1 := reflect.ValueOf(f0)
-	param := make([]reflect.Value, len(p0))
-	for i := 0; i < len(p0); i++ {
+	pnum := len(p0)
+	param := make([]reflect.Value, pnum)
+	for i := 0; i < pnum; i++ {
 		param[i] = reflect.ValueOf(p0[i])
 	}
 	res := f1.Call(param)
