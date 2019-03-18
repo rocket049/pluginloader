@@ -15,6 +15,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	res, err := p.Call("Hello", "A", "B", "C")
+	fmt.Println(res, err)
+
+	res, err = p.Call("Say", "Let's run.")
 	fmt.Println(res, err)
 }
