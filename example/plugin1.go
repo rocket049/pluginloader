@@ -13,3 +13,7 @@ func Say(p string) int {
 	fmt.Printf("You say: %s\n", p)
 	return len(p)
 }
+
+func Shout(p string) {
+	fmt.Printf("You shout: %s\n", p)
+}

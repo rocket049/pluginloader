@@ -21,4 +21,7 @@ func main() {
 
 	res, err = p.Call("Say", "Let's run.")
 	fmt.Println(res, err)
+
+	res, err = p.Call("Shout", "I love the world.")
+	fmt.Println(res, err)
 }
