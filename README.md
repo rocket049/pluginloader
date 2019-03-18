@@ -25,6 +25,6 @@ res, err := p.Call("NameOfFunc", p0,p1,p3,...)
 
 ### 注意(attention)：
 
-被 `Call` 的函数返回值格式只能是： `(ResType, error)`
+被 `Call` 的函数返回值格式只能是： `(ResType, error)` -- `ResType`可以是任何类型。
 
-The func called must only have the return format: `(ResType, error)`
+The func called must only have the return format: `(ResType, error)` -- `ResType` can be any type.
