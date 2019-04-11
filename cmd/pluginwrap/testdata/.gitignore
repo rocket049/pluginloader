@@ -1,3 +1,4 @@
 pluginwrap
 testdata
 foo.so
+fooWrap.go
