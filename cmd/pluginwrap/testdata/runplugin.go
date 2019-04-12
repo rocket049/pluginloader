@@ -17,7 +17,9 @@ func test1() {
 	}
 
 	fmt.Println("call func Help:")
-	p.Call("Help", "good boy")
+	//p.Call("Help", "good boy")
+	res, _ := p.CallValue("Help", "good boy")
+	fmt.Println(res[0].String(), res[1].IsNil())
 
 	fmt.Println("call func Bar:")
 	p.Call("Bar")

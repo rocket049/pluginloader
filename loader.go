@@ -10,6 +10,21 @@ type PluginLoader struct {
 	p *plugin.Plugin
 }
 
+//CallValue Allow any number of return values,return type: []reflect.Value,error
+func (p *PluginLoader) CallValue(funcName string, p0 ...interface{}) ([]reflect.Value, error) {
+	f0, err := p.p.Lookup(funcName)
+	if err != nil {
+		return nil, err
+	}
+	f1 := reflect.ValueOf(f0)
+	pnum := len(p0)
+	param := make([]reflect.Value, pnum)
+	for i := 0; i < pnum; i++ {
+		param[i] = reflect.ValueOf(p0[i])
+	}
+	return f1.Call(param), nil
+}
+
 //Call return type must be: (res,error)
 func (p *PluginLoader) Call(funcName string, p0 ...interface{}) (interface{}, error) {
 	f0, err := p.p.Lookup(funcName)
