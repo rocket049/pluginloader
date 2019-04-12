@@ -19,7 +19,7 @@ func parseLine(line string, res []string, doc string) {
 		panic(err)
 	}
 	if rfp.MatchString(line) {
-		//pickFunc(line, res, doc)
+		pickFunc(line, res, doc)
 	} else if rsp.MatchString(line) {
 		pickMethod(line, res, doc)
 	} else {
@@ -29,7 +29,7 @@ func parseLine(line string, res []string, doc string) {
 
 //pickMethod get struct name and method from a line,then append to structs
 func pickMethod(line string, res []string, doc string) {
-	rs := `func\s+\(\w+\s+\**(\w+)\)`
+	rs := `^func\s+\(\w+\s+\**(\w+)\)`
 	rsp, err := regexp.Compile(rs)
 	if err != nil {
 		panic(err)
@@ -37,23 +37,44 @@ func pickMethod(line string, res []string, doc string) {
 	ps := rsp.FindStringSubmatch(line)
 	name := ps[1]
 
-	rs = `func\s+\(\w+\s+\**\w+\)\s*(\w+\(.*\))`
+	rs = `^func\s+\(\w+\s+\**\w+\)\s*(\w+\([^\)]*\))`
 	rsp, err = regexp.Compile(rs)
 	if err != nil {
 		panic(err)
 	}
 	ps = rsp.FindStringSubmatch(line)
 	method := strings.TrimSpace(ps[1])
-	//fmt.Printf("%s.%s\n", name, method)
-	for i := 0; i < len(res); i++ {
-		res[i] = convertTypeName(res[i])
+
+	rs = `^func\s+\(\w+\s+\**\w+\)\s*\w+\(([^\)]*)\)`
+	rsp, err = regexp.Compile(rs)
+	if err != nil {
+		panic(err)
 	}
-	addStructMethod(name, method, res, doc)
+	ps = rsp.FindStringSubmatch(line)
+	args := strings.Split(ps[1], ",")
+	//fmt.Printf("%s.%s\n", name, method)
+
+	var pick bool = true
+	for i := 0; i < len(res); i++ {
+		if isBuiltin(res[i]) == false {
+			pick = false
+			break
+		}
+	}
+	for i := 0; i < len(args); i++ {
+		if isBuiltin(args[i]) == false {
+			pick = false
+			break
+		}
+	}
+	if pick {
+		addStructMethod(name, method, res, doc)
+	}
 }
 
 //pickFunc get func from a line,then append to funcs
 func pickFunc(line string, res []string, doc string) {
-	rf := `func[^\)]*\)`
+	rf := `^func[^\)]*\)`
 	rfp, err := regexp.Compile(rf)
 	if err != nil {
 		panic(err)
@@ -67,24 +88,36 @@ func pickFunc(line string, res []string, doc string) {
 	typ := "func" + ps[n2:]
 	typ = strings.TrimSpace(typ)
 	//fmt.Printf("type T%s %s\n", name, typ)
-	for i := 0; i < len(res); i++ {
-		res[i] = convertTypeName(res[i])
+
+	rs := `^func\s+\w+\(([^\)]*)\)`
+	rsp, err := regexp.Compile(rs)
+	if err != nil {
+		panic(err)
 	}
-	addFunc(name, typ, res, doc)
+	psv := rsp.FindStringSubmatch(line)
+	args := strings.Split(psv[1], ",")
+	var pick bool = true
+	for i := 0; i < len(res); i++ {
+		//res[i] = convertTypeName(res[i])
+		if isBuiltin(res[i]) == false {
+			pick = false
+			break
+		}
+	}
+	for i := 0; i < len(args); i++ {
+		if isBuiltin(args[i]) == false {
+			pick = false
+			break
+		}
+	}
+	if pick {
+		addFunc(name, typ, res, doc)
+		fmt.Println("add func:", name)
+	}
 }
 
 func convertTypeName(typ string) string {
-	t := strings.TrimSpace(typ)
-	n := strings.Index(t, "*")
-	if n > -1 {
-		t = t[n+1:]
-	}
-	n = strings.Index(t, " ")
-	if n > -1 {
-		t = t[n+1:]
-	}
-	t = strings.TrimSpace(t)
-	if isBuiltin(t) {
+	if isBuiltin(typ) {
 		return typ
 	} else {
 		return "interface{}"
@@ -92,7 +125,8 @@ func convertTypeName(typ string) string {
 }
 
 func isBuiltin(typ string) bool {
-	builtintyps := []string{"ComplexType",
+	builtintyps := []string{"",
+		"ComplexType",
 		"FloatType",
 		"IntegerType",
 		"Type",
@@ -117,11 +151,22 @@ func isBuiltin(typ string) bool {
 		"uint64",
 		"uint8",
 		"uintptr"}
+	t := strings.TrimSpace(typ)
+	n := strings.Index(t, "*")
+	if n > -1 {
+		t = t[n+1:]
+	}
+	n = strings.Index(t, " ")
+	if n > -1 {
+		t = t[n+1:]
+	}
+	t = strings.TrimSpace(t)
 	length := len(builtintyps)
 	for i := 0; i < length; i++ {
-		if typ == builtintyps[i] {
+		if t == builtintyps[i] {
 			return true
 		}
 	}
+	fmt.Println("not builtin:", typ)
 	return false
 }

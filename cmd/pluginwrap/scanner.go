@@ -58,6 +58,8 @@ func showFile(f *ast.File, fset *token.FileSet, fh *fileHandler) {
 					}
 				}
 			}
+
+			//fmt.Println(x.Name.Name, "args:", args)
 			parseLine(line, res, x.Doc.Text())
 		}
 	}

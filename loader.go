@@ -7,12 +7,12 @@ import (
 )
 
 type PluginLoader struct {
-	p *plugin.Plugin
+	P *plugin.Plugin
 }
 
 //CallValue Allow any number of return values,return type: []reflect.Value,error
 func (p *PluginLoader) CallValue(funcName string, p0 ...interface{}) ([]reflect.Value, error) {
-	f0, err := p.p.Lookup(funcName)
+	f0, err := p.P.Lookup(funcName)
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func (p *PluginLoader) CallValue(funcName string, p0 ...interface{}) ([]reflect.
 
 //Call return type must be: (res,error)
 func (p *PluginLoader) Call(funcName string, p0 ...interface{}) (interface{}, error) {
-	f0, err := p.p.Lookup(funcName)
+	f0, err := p.P.Lookup(funcName)
 	if err != nil {
 		return nil, err
 	}
@@ -58,5 +58,5 @@ func NewPluginLoader(pathName string) (*PluginLoader, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &PluginLoader{p: plug}, nil
+	return &PluginLoader{P: plug}, nil
 }

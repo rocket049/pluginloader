@@ -17,12 +17,13 @@ func test1() {
 	}
 
 	fmt.Println("call func Help:")
-	//p.Call("Help", "good boy")
-	res, _ := p.CallValue("Help", "good boy")
-	fmt.Println(res[0].String(), res[1].IsNil())
+	Help := FnHelp(p.P)
+	res, err := Help("help friend")
+	fmt.Println(res, err)
 
 	fmt.Println("call func Bar:")
-	p.Call("Bar")
+	Bar := FnBar(p.P)
+	Bar()
 
 	iface, err := p.Call("NewMan")
 	if err != nil {
@@ -39,8 +40,6 @@ func test1() {
 	foo := iface.(IFoo)
 	fmt.Println("call foo.Say:")
 	foo.Say("aaa")
-	fmt.Println("call foo.Hi:")
-	foo.Hi("bbbb")
 
 	iface, err = p.Call("NewLittle")
 	if err != nil {

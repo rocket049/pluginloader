@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"text/template"
 )
 
 type funcDefine struct {
@@ -53,21 +54,6 @@ func createFunc(f *funcDefine) string {
 	return fmt.Sprintf("%s %s", f.Body, res1)
 }
 
-// func printIdents() {
-// 	fmt.Printf("package main\n\n")
-// 	for name, ms := range structs {
-// 		fmt.Printf("type I%s interface {\n", name)
-// 		for _, v := range ms {
-// 			fmt.Printf("\t%s\n", createFunc(&v))
-// 		}
-// 		fmt.Printf("}\n\n")
-// 	}
-
-// 	for name, f := range funcs {
-// 		fmt.Printf("type Fn%s %s\n\n", name, createFunc(&f))
-// 	}
-// }
-
 func saveIdents(name string) {
 	fp, err := os.Create(name)
 	if err != nil {
@@ -77,8 +63,10 @@ func saveIdents(name string) {
 
 	w := fmt.Sprintf("package main\n\n")
 	fp.WriteString(w)
-	// w = fmt.Sprintf("import \"plugin\"\n\n")
-	// fp.WriteString(w)
+	if len(funcs) > 0 {
+		w = fmt.Sprintf("import \"plugin\"\n\n")
+		fp.WriteString(w)
+	}
 	for name, ms := range structs {
 		w = fmt.Sprintf("type I%s interface {\n", name)
 		fp.WriteString(w)
@@ -90,15 +78,15 @@ func saveIdents(name string) {
 		fp.WriteString(w)
 	}
 
-	// for name, f := range funcs {
-	// 	typ := createFunc(&f)
-	// 	data := make(map[string]string)
-	// 	data["name"] = name
-	// 	data["typ"] = typ
-	// 	t := template.New("")
-	// 	t.Parse(fnTpl)
-	// 	t.Execute(fp, data)
-	// }
+	for name, f := range funcs {
+		typ := createFunc(&f)
+		data := make(map[string]string)
+		data["name"] = name
+		data["typ"] = typ
+		t := template.New("")
+		t.Parse(fnTpl)
+		t.Execute(fp, data)
+	}
 }
 
 const fnTpl = `func Fn{{.name}}(p *plugin.Plugin) {{.typ}} {
