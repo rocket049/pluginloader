@@ -60,11 +60,11 @@ func saveIdents(name string) {
 		panic(err)
 	}
 	defer fp.Close()
-
+	pkgName := name[:len(name)-7]
 	w := fmt.Sprintf("package main\n\n")
 	fp.WriteString(w)
 	if len(funcs) > 0 {
-		w = fmt.Sprintf("import \"plugin\"\n\n")
+		w = fmt.Sprintf("import \"github.com/rocket049/pluginloader\"\n\n")
 		fp.WriteString(w)
 	}
 	for name, ms := range structs {
@@ -78,23 +78,30 @@ func saveIdents(name string) {
 		fp.WriteString(w)
 	}
 
-	for name, f := range funcs {
+	afunc := []resFunc{}
+	for fn, f := range funcs {
 		typ := createFunc(&f)
-		data := make(map[string]string)
-		data["name"] = name
-		data["typ"] = typ
-		t := template.New("")
-		t.Parse(fnTpl)
-		t.Execute(fp, data)
+		afunc = append(afunc, resFunc{fn, typ})
 	}
+	data := make(map[string]interface{})
+	data["pkg"] = pkgName
+	data["funcs"] = afunc
+	t := template.New("")
+	t.Parse(fnTpl)
+	t.Execute(fp, data)
 }
 
-const fnTpl = `func Fn{{.name}}(p *plugin.Plugin) {{.typ}} {
-	f,err := p.Lookup("{{.name}}")
-	if err != nil {
-		panic(err)
-	}
-	return f.({{.typ}})
+type resFunc struct {
+	Name string
+	Typ  string
 }
 
+const fnTpl = `
+{{range .funcs}}var {{.Name}} {{.Typ}}
+{{end}}
+
+func Init{{.pkg}}Funcs(p *pluginloader.PluginLoader) {
+{{range .funcs}}	p.MakeFunc(&{{.Name}}, "{{.Name}}")
+{{end}}
+}
 `

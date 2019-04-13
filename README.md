@@ -6,6 +6,11 @@
 被调用的函数可以返回任意数量的返回值，返回值形式为: ([]reflect.Value,error)。
 CallValue Allow any number of return values,return type: ([]reflect.Value,error)
 
+20190413 add new method: MakeFunc，
+用函数名从`plugin`中构建`func`。
+make func from plugin by name.
+
+
 ### 内容
 
 ```
@@ -18,6 +23,9 @@ func (p *PluginLoader) Call(funcName string, p0 ...interface{}) (interface{}, er
 
 //CallValue Allow any number of return values,return type: []reflect.Value,error
 func (p *PluginLoader) CallValue(funcName string, p0 ...interface{}) ([]reflect.Value, error)
+
+//MakeFunc point a func ptr to plugin
+func (s *PluginLoader) MakeFunc(fptr interface{}, name string) error 
 ```
 
 ### 用法（usage）:
@@ -29,7 +37,16 @@ p, err := pluginloader.NewPluginLoader( "path_to_plugin" )
 if err != nil {
 	panic(err)
 }
+
 res, err := p.Call("NameOfFunc", p0,p1,p3,...)
+//...
+
+ret := p.CallValue("NameOfFunc", p0,p1,p3,...)
+//...
+
+var Foo func(arg string)(string,error)
+p.MakeFunc(&Foo,"Foo")
+//call Foo(something)
 
 ```
 

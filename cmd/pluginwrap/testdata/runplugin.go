@@ -16,13 +16,13 @@ func test1() {
 		panic(err)
 	}
 
+	InitfooFuncs(p)
+
 	fmt.Println("call func Help:")
-	Help := FnHelp(p.P)
 	res, err := Help("help friend")
 	fmt.Println(res, err)
 
 	fmt.Println("call func Bar:")
-	Bar := FnBar(p.P)
 	Bar()
 
 	iface, err := p.Call("NewMan")

@@ -53,10 +53,24 @@ func (p *PluginLoader) Call(funcName string, p0 ...interface{}) (interface{}, er
 	}
 }
 
+//NewPluginLoader create a loader
 func NewPluginLoader(pathName string) (*PluginLoader, error) {
 	plug, err := plugin.Open(pathName)
 	if err != nil {
 		return nil, err
 	}
 	return &PluginLoader{P: plug}, nil
+}
+
+//MakeFunc point a func ptr to plugin
+func (s *PluginLoader) MakeFunc(fptr interface{}, name string) error {
+	f, err := s.P.Lookup(name)
+	if err != nil {
+		return err
+	}
+	vf := reflect.ValueOf(f)
+	fn := reflect.ValueOf(fptr).Elem()
+	v := reflect.MakeFunc(fn.Type(), vf.Call)
+	fn.Set(v)
+	return nil
 }
