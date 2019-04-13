@@ -40,6 +40,8 @@ dirWrap.go
 	if err != nil {
 		panic(err)
 	}
+	
+	// MUST call InitxxxFuncs(p) before call funcs, xxx = plugin名字
 	InitfooFuncs(p)
 	// use funcs in plugin foo
 ```
