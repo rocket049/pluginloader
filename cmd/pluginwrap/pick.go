@@ -48,7 +48,7 @@ func pickFunc(name string, args, res, vtypes []string, doc string) {
 
 	if pick {
 		addFunc(name, body, res, doc)
-		fmt.Println("add func:", name)
+		//fmt.Println("add func:", name)
 	}
 }
 
@@ -62,7 +62,7 @@ func convertTypeName(typ string) string {
 
 func clearType(typ string) string {
 	t := strings.TrimLeft(typ, " .[]*")
-	fmt.Println("trim:", typ, "->", t)
+	//fmt.Println("trim:", typ, "->", t)
 	return t
 }
 

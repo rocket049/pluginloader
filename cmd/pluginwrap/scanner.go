@@ -47,16 +47,16 @@ func main() {
 		for fn, f := range p.Files {
 			//ast.FileExports(f)
 			fh := newFileHandler(fn)
-			fmt.Println("File:", fn)
+			//fmt.Println("File:", fn)
 			getTypeDecls(f, fset, fh)
 		}
 	}
-	for k, p := range pkgs {
-		fmt.Println("Pkg:", k)
+	for _, p := range pkgs {
+		//fmt.Println("Pkg:", k)
 		for fn, f := range p.Files {
 			//ast.FileExports(f)
 			fh := newFileHandler(fn)
-			fmt.Println("File:", fn)
+			//fmt.Println("File:", fn)
 			getFuncDecls(f, fset, fh)
 		}
 	}
@@ -74,7 +74,7 @@ func getTypeDecls(f *ast.File, fset *token.FileSet, fh *fileHandler) {
 		switch x := n.(type) {
 		case *ast.GenDecl:
 			if x.Tok == token.TYPE {
-				fmt.Println("TYPE:", fh.GetLineAtPos(fset.Position(x.Pos()).Offset))
+				//fmt.Println("TYPE:", fh.GetLineAtPos(fset.Position(x.Pos()).Offset))
 				addTypeFromLine(fh.GetLineAtPos(fset.Position(x.Pos()).Offset))
 			}
 		}
