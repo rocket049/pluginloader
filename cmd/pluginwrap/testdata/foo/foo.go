@@ -51,6 +51,6 @@ func GetTime() time.Time {
 	return time.Now()
 }
 
-func GetRenterer() md.Renderer {
+func GetRenterer() []md.Renderer {
 	return nil
 }
