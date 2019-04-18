@@ -1,9 +1,12 @@
-本程序用于从源代码生成`plugin`中的导出结构体的接口(`interface`)，以便用于类型断言，只支持对只使用基本类型的`method`的包装。
-支持对使用基本类型的函数和方法进行包装。
+本程序用于从源代码生成`plugin`中的导出结构体的接口(`interface`)，以便用于类型断言，以及对函数和方法进行包装。
+函数、方法的返回值、参数类型不能是用户自定义类型。
+pluginwrap几乎已经完美了！
+现在除了用户自定义类型，已经可以使用所有被导入库的类型。
 
-use this program convert export structs to interface, in order to type assert. 
-
-Only wrap funcs and methods use base type.
+Use this program convert export structs to interface, in order to type assert. 
+Wrap funcs and methods.
+pluginwrap is almost perfect now! 
+It can deal with all types import from packages, except User Defined types in main.
 
 安装(install)：
 

@@ -144,11 +144,22 @@ func clearType(typ string) string {
 
 func isUserDefType(typ string) bool {
 	t := clearType(typ)
-	_, ok := typs[t]
-	if !ok {
-		pickImport(t)
+	if strings.HasPrefix(t, "map[") == false {
+		_, ok := typs[t]
+		if !ok {
+			pickImport(t)
+		}
+		return ok
+	} else {
+		//map[type1]type2
+		typs := strings.SplitN(t[4:], "]", 2)
+		for _, t1 := range typs {
+			if isUserDefType(t1) == true {
+				return true
+			}
+		}
+		return false
 	}
-	return ok
 }
 
 func pickImport(typ string) {

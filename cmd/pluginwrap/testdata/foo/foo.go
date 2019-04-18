@@ -51,6 +51,12 @@ func GetTime() time.Time {
 	return time.Now()
 }
 
-func GetRenterer() []md.Renderer {
+func GetRenterer() map[string]md.Renderer {
+	return nil
+}
+
+type IDX int
+
+func GetRentererBad() map[IDX]md.Renderer {
 	return nil
 }

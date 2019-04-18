@@ -2,13 +2,18 @@
 用于简化调用 plugin 内的函数。 Help developer call func in go plugin easy.
 
 ### ChangeLog
-20190412 add new method: CallValue, 
-被调用的函数可以返回任意数量的返回值，返回值形式为: ([]reflect.Value,error)。
-CallValue Allow any number of return values,return type: ([]reflect.Value,error)
+
+20190418 pluginwrap is almost perfect now! pluginwrap几乎已经完美了！
+现在除了用户自定义类型，已经可以使用所有被导入库的类型。
+It can deal with all types import from packages, except User Defined types in main.
 
 20190413 add new method: MakeFunc，
 用函数名从`plugin`中构建`func`。
 make func from plugin by name.
+
+20190412 add new method: CallValue, 
+被调用的函数可以返回任意数量的返回值，返回值形式为: ([]reflect.Value,error)。
+CallValue Allow any number of return values,return type: ([]reflect.Value,error)
 
 
 ### 内容
