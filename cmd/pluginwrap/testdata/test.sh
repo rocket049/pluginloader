@@ -7,5 +7,5 @@ echo "run 'go vet -v' ..."
 go vet -v
 echo "build plugin ..."
 go build -o foo.so -buildmode=plugin ./foo
-echo "run runplugin.go ..."
+echo "run go test ..."
 go test -bench=.

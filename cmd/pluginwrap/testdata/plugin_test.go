@@ -2,6 +2,7 @@ package main
 
 import (
 	"testing"
+	"time"
 
 	"github.com/rocket049/pluginloader"
 )
@@ -48,6 +49,15 @@ func TestPlugin(t *testing.T) {
 	lit := iface.(Ilittle)
 	t.Log("call little.Hello:")
 	lit.Hello()
+
+	if GetRenterer() != nil {
+		t.Fatal("err GetRenterer")
+	}
+
+	tm1 := GetTime()
+	if tm1.Unix() < time.Now().Unix() {
+		t.Fatal("err GetTime")
+	}
 }
 
 func BenchmarkWrap(b *testing.B) {

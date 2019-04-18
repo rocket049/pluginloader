@@ -17,6 +17,9 @@ func main() {
 	if len(os.Args) == 2 {
 		path1 = os.Args[1]
 	}
+	cmd := exec.Command("gofmt", "-w", path1)
+	cmd.Run()
+
 	var outfile string
 	if path1 == "." {
 		outfile = "pluginWrap.go"
@@ -41,7 +44,7 @@ func main() {
 	}
 	//printIdents()
 	saveIdents(outfile)
-	cmd := exec.Command("go", "fmt", outfile)
+	cmd = exec.Command("gofmt", "-w", outfile)
 	cmd.Run()
 }
 
