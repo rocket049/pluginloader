@@ -33,7 +33,7 @@ func main() {
 	for k, p := range pkgs {
 		fmt.Println("Pkg:", k)
 		for fn, f := range p.Files {
-			ast.FileExports(f)
+			//ast.FileExports(f)
 			fh := newFileHandler(fn)
 			fmt.Println("File:", fn)
 			showFile(f, fset, fh)
@@ -46,12 +46,18 @@ func main() {
 }
 
 func showFile(f *ast.File, fset *token.FileSet, fh *fileHandler) {
+	for _, pkg := range f.Imports {
+		addImport(pkg)
+	}
 	for _, n := range f.Decls {
 		switch x := n.(type) {
 		case *ast.FuncDecl:
 			line := fh.GetLineAtPos(fset.Position(x.Pos()).Offset)
 			res := []string{}
 			if x.Type != nil {
+				if x.Name.IsExported() == false {
+					continue
+				}
 				if x.Type.Results != nil {
 					for _, v := range x.Type.Results.List {
 						res = append(res, fh.GetLinePosEnd(fset.Position(v.Pos()).Offset, fset.Position(v.End()).Offset))
@@ -61,6 +67,11 @@ func showFile(f *ast.File, fset *token.FileSet, fh *fileHandler) {
 
 			//fmt.Println(x.Name.Name, "args:", args)
 			parseLine(line, res, x.Doc.Text())
+		case *ast.GenDecl:
+			if x.Tok == token.TYPE {
+				//fmt.Println("TYPE:", fh.GetLineAtPos(fset.Position(x.Pos()).Offset))
+				addTypeFromLine(fh.GetLineAtPos(fset.Position(x.Pos()).Offset))
+			}
 		}
 	}
 }

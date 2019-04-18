@@ -56,13 +56,13 @@ func pickMethod(line string, res []string, doc string) {
 
 	var pick bool = true
 	for i := 0; i < len(res); i++ {
-		if isBuiltin(res[i]) == false {
+		if isUserDefType(res[i]) {
 			pick = false
 			break
 		}
 	}
 	for i := 0; i < len(args); i++ {
-		if isBuiltin(args[i]) == false {
+		if isUserDefType(args[i]) {
 			pick = false
 			break
 		}
@@ -98,14 +98,13 @@ func pickFunc(line string, res []string, doc string) {
 	args := strings.Split(psv[1], ",")
 	var pick bool = true
 	for i := 0; i < len(res); i++ {
-		//res[i] = convertTypeName(res[i])
-		if isBuiltin(res[i]) == false {
+		if isUserDefType(res[i]) {
 			pick = false
 			break
 		}
 	}
 	for i := 0; i < len(args); i++ {
-		if isBuiltin(args[i]) == false {
+		if isUserDefType(args[i]) {
 			pick = false
 			break
 		}
@@ -117,40 +116,14 @@ func pickFunc(line string, res []string, doc string) {
 }
 
 func convertTypeName(typ string) string {
-	if isBuiltin(typ) {
+	if isUserDefType(typ) == false {
 		return typ
 	} else {
 		return "interface{}"
 	}
 }
 
-func isBuiltin(typ string) bool {
-	builtintyps := []string{"",
-		"ComplexType",
-		"FloatType",
-		"IntegerType",
-		"Type",
-		"Type1",
-		"bool",
-		"byte",
-		"complex128",
-		"complex64",
-		"error",
-		"float32",
-		"float64",
-		"int",
-		"int16",
-		"int32",
-		"int64",
-		"int8",
-		"rune",
-		"string",
-		"uint",
-		"uint16",
-		"uint32",
-		"uint64",
-		"uint8",
-		"uintptr"}
+func clearType(typ string) string {
 	t := strings.TrimSpace(typ)
 	n := strings.Index(t, "*")
 	if n > -1 {
@@ -161,12 +134,24 @@ func isBuiltin(typ string) bool {
 		t = t[n+1:]
 	}
 	t = strings.TrimSpace(t)
-	length := len(builtintyps)
-	for i := 0; i < length; i++ {
-		if t == builtintyps[i] {
-			return true
-		}
+	return t
+}
+
+func isUserDefType(typ string) bool {
+	t := clearType(typ)
+	_, ok := typs[t]
+	if !ok {
+		pickImport(t)
 	}
-	fmt.Println("not builtin:", typ)
-	return false
+	return ok
+}
+
+func pickImport(typ string) {
+	sp := strings.Split(typ, ".")
+
+	if len(sp) != 2 {
+		return
+	}
+
+	importsPicked[sp[0]] = imports[sp[0]]
 }

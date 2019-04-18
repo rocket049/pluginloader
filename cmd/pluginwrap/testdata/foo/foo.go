@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"time"
+
+	md "github.com/russross/blackfriday"
 )
 
 type Foo struct{}
@@ -16,7 +18,7 @@ func (s *Foo) Say(s1 string) (string, error) {
 
 func (s *Foo) Hi(s1 string) *Foo {
 	fmt.Println(time.Now())
-	fmt.Println(s1)
+	fmt.Println(s1, md.EXTENSION_FENCED_CODE)
 	return s
 }
 
@@ -39,4 +41,16 @@ func GoFoo(p *Foo) error {
 
 func hello() {
 	fmt.Println(time.Now())
+}
+
+func SwapInt(a, b int) (x, y int) {
+	return b, a
+}
+
+func GetTime() time.Time {
+	return time.Now()
+}
+
+func GetRenterer() md.Renderer {
+	return nil
 }
