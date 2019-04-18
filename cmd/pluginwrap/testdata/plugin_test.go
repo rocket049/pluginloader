@@ -58,6 +58,13 @@ func TestPlugin(t *testing.T) {
 	if tm1.Unix() < time.Now().Unix() {
 		t.Fatal("err GetTime")
 	}
+
+	vi := GetArray()
+	for i := 0; i < 3; i++ {
+		if vi[i] != i+1 {
+			t.Fatal("err GetArray")
+		}
+	}
 }
 
 func BenchmarkWrap(b *testing.B) {

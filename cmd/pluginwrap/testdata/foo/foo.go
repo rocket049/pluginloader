@@ -60,3 +60,7 @@ type IDX int
 func GetRentererBad() map[IDX]md.Renderer {
 	return nil
 }
+
+func GetArray() []int {
+	return []int{1, 2, 3}
+}

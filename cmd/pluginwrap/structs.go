@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"go/ast"
 	"os"
@@ -72,14 +71,7 @@ func addImport(pkg *ast.ImportSpec) {
 }
 
 func createFunc(f *funcDefine) string {
-	res := bytes.NewBufferString("")
-	for i, _ := range f.Res {
-		if i > 0 {
-			res.WriteString(",")
-		}
-		res.WriteString(f.Res[i])
-	}
-	res1 := res.String()
+	res1 := strings.Join(f.Res, ",")
 	if strings.Contains(res1, ",") || strings.Contains(res1, " ") {
 		res1 = fmt.Sprintf("(%s)", res1)
 	}

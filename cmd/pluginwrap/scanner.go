@@ -64,21 +64,35 @@ func showFile(f *ast.File, fset *token.FileSet, fh *fileHandler) {
 	for _, n := range f.Decls {
 		switch x := n.(type) {
 		case *ast.FuncDecl:
-			line := fh.GetLineAtPos(fset.Position(x.Pos()).Offset)
 			res := []string{}
+			args := []string{}
+			vtyps := []string{}
+			recv := ""
 			if x.Type != nil {
 				if x.Name.IsExported() == false {
 					continue
 				}
+				if x.Recv != nil {
+					p := x.Recv.List[0].Type.Pos()
+					e := x.Recv.List[0].Type.End()
+					recv = fh.GetLinePosEnd(fset.Position(p).Offset, fset.Position(e).Offset)
+				}
 				if x.Type.Results != nil {
 					for _, v := range x.Type.Results.List {
 						res = append(res, fh.GetLinePosEnd(fset.Position(v.Pos()).Offset, fset.Position(v.End()).Offset))
+						vtyps = append(vtyps, fh.GetLinePosEnd(fset.Position(v.Type.Pos()).Offset, fset.Position(v.Type.End()).Offset))
+					}
+				}
+				if x.Type.Params != nil {
+					for _, v := range x.Type.Params.List {
+						args = append(args, fh.GetLinePosEnd(fset.Position(v.Pos()).Offset, fset.Position(v.End()).Offset))
+						vtyps = append(vtyps, fh.GetLinePosEnd(fset.Position(v.Type.Pos()).Offset, fset.Position(v.Type.End()).Offset))
 					}
 				}
 			}
 
 			//fmt.Println(x.Name.Name, "args:", args)
-			parseLine(line, res, x.Doc.Text())
+			parseLine(recv, x.Name.Name, args, res, vtyps, x.Doc.Text())
 		case *ast.GenDecl:
 			if x.Tok == token.TYPE {
 				//fmt.Println("TYPE:", fh.GetLineAtPos(fset.Position(x.Pos()).Offset))
