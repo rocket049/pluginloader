@@ -37,7 +37,7 @@ dirWrap.go
 	if err != nil {
 		panic(err)
 	}
-	iface, err := p.Call("NewFoo")
+	iface, err := p.Call("NewFoo",arg...)
 	if err != nil {
 		panic(err)
 	}
