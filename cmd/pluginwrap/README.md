@@ -3,10 +3,19 @@
 pluginwrap几乎已经完美了！
 现在除了用户自定义类型，已经可以使用所有被导入库的类型。
 
+*如果必须使用自定义类型，有两种办法：*
+
+1. 请使用 `pluginloader.Call` 或 `pluginloader.CallValue` 调用。
+2. 把需要导出的复杂类型做成第三方库（`import "your/package"`），不要在`plugin`源代码中定义。
+
 Use this program convert export structs to interface, in order to type assert. 
 Wrap funcs and methods.
 pluginwrap is almost perfect now! 
 It can deal with all types import from packages, except User Defined types in main.
+
+*If you must export self defined type, please put the code in a package can be imported by others.*
+
+
 
 安装(install)：
 
