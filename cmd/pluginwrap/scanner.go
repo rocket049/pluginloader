@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -13,6 +14,14 @@ import (
 )
 
 func main() {
+	var help = flag.Bool("h", false, "show help")
+	flag.Parse()
+	if *help == true {
+		fmt.Println(`Usage:
+		pluginwrap path/to/plugin/src
+		`)
+		return
+	}
 	var path1 string = "."
 	if len(os.Args) == 2 {
 		path1 = os.Args[1]
