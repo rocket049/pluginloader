@@ -8,4 +8,5 @@ go vet -v
 echo "build plugin ..."
 go build -o foo.so -buildmode=plugin ./foo
 echo "run go test ..."
-go test -bench=.
+#go test -bench=.
+go test

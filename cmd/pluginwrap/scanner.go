@@ -48,7 +48,16 @@ func main() {
 			//ast.FileExports(f)
 			fh := newFileHandler(fn)
 			fmt.Println("File:", fn)
-			showFile(f, fset, fh)
+			getTypeDecls(f, fset, fh)
+		}
+	}
+	for k, p := range pkgs {
+		fmt.Println("Pkg:", k)
+		for fn, f := range p.Files {
+			//ast.FileExports(f)
+			fh := newFileHandler(fn)
+			fmt.Println("File:", fn)
+			getFuncDecls(f, fset, fh)
 		}
 	}
 	//printIdents()
@@ -57,10 +66,22 @@ func main() {
 	cmd.Run()
 }
 
-func showFile(f *ast.File, fset *token.FileSet, fh *fileHandler) {
+func getTypeDecls(f *ast.File, fset *token.FileSet, fh *fileHandler) {
 	for _, pkg := range f.Imports {
 		addImport(pkg)
 	}
+	for _, n := range f.Decls {
+		switch x := n.(type) {
+		case *ast.GenDecl:
+			if x.Tok == token.TYPE {
+				fmt.Println("TYPE:", fh.GetLineAtPos(fset.Position(x.Pos()).Offset))
+				addTypeFromLine(fh.GetLineAtPos(fset.Position(x.Pos()).Offset))
+			}
+		}
+	}
+}
+
+func getFuncDecls(f *ast.File, fset *token.FileSet, fh *fileHandler) {
 	for _, n := range f.Decls {
 		switch x := n.(type) {
 		case *ast.FuncDecl:
@@ -80,25 +101,30 @@ func showFile(f *ast.File, fset *token.FileSet, fh *fileHandler) {
 				if x.Type.Results != nil {
 					for _, v := range x.Type.Results.List {
 						res = append(res, fh.GetLinePosEnd(fset.Position(v.Pos()).Offset, fset.Position(v.End()).Offset))
-						vtyps = append(vtyps, fh.GetLinePosEnd(fset.Position(v.Type.Pos()).Offset, fset.Position(v.Type.End()).Offset))
+						vtyps = appendTypeFromExpr(vtyps, v.Type, fset, fh)
 					}
 				}
 				if x.Type.Params != nil {
 					for _, v := range x.Type.Params.List {
 						args = append(args, fh.GetLinePosEnd(fset.Position(v.Pos()).Offset, fset.Position(v.End()).Offset))
-						vtyps = append(vtyps, fh.GetLinePosEnd(fset.Position(v.Type.Pos()).Offset, fset.Position(v.Type.End()).Offset))
+						vtyps = appendTypeFromExpr(vtyps, v.Type, fset, fh)
 					}
 				}
 			}
 
 			//fmt.Println(x.Name.Name, "args:", args)
 			parseLine(recv, x.Name.Name, args, res, vtyps, x.Doc.Text())
-		case *ast.GenDecl:
-			if x.Tok == token.TYPE {
-				//fmt.Println("TYPE:", fh.GetLineAtPos(fset.Position(x.Pos()).Offset))
-				addTypeFromLine(fh.GetLineAtPos(fset.Position(x.Pos()).Offset))
-			}
 		}
+	}
+}
+
+func appendTypeFromExpr(vtyps []string, expr ast.Expr, fset *token.FileSet, fh *fileHandler) []string {
+	switch node := expr.(type) {
+	case *ast.MapType:
+		res1 := appendTypeFromExpr(vtyps, node.Key, fset, fh)
+		return appendTypeFromExpr(res1, node.Value, fset, fh)
+	default:
+		return append(vtyps, fh.GetLinePosEnd(fset.Position(expr.Pos()).Offset, fset.Position(expr.End()).Offset))
 	}
 }
 

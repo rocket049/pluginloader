@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	md "github.com/russross/blackfriday"
@@ -12,7 +13,6 @@ type Foo struct{}
 //Say say something
 func (s *Foo) Say(s1 string) (string, error) {
 	fmt.Println(time.Now())
-	fmt.Println(s1)
 	return s1, nil
 }
 
@@ -39,7 +39,7 @@ func GoFoo(p *Foo) error {
 	return nil
 }
 
-func hello() {
+func Hello(m ...*Man) {
 	fmt.Println(time.Now())
 }
 
@@ -51,7 +51,7 @@ func GetTime() time.Time {
 	return time.Now()
 }
 
-func GetRenterer() map[string]md.Renderer {
+func GetRenterer(m map[string]*os.File) map[string]md.Renderer {
 	return nil
 }
 

@@ -53,6 +53,7 @@ func addTypeFromLine(line string) {
 	} else {
 		typs[sp[1]] = ""
 	}
+	fmt.Println(sp[1])
 }
 
 func addImport(pkg *ast.ImportSpec) {

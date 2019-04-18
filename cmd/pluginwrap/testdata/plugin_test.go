@@ -40,7 +40,7 @@ func TestPlugin(t *testing.T) {
 	}
 	foo := iface.(IFoo)
 	t.Log("call foo.Say:")
-	foo.Say("aaa")
+	foo.Say("hello")
 
 	iface, err = p.Call("NewLittle")
 	if err != nil {
@@ -50,7 +50,7 @@ func TestPlugin(t *testing.T) {
 	t.Log("call little.Hello:")
 	lit.Hello()
 
-	if GetRenterer() != nil {
+	if GetRenterer(nil) != nil {
 		t.Fatal("err GetRenterer")
 	}
 

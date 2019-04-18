@@ -61,29 +61,19 @@ func convertTypeName(typ string) string {
 }
 
 func clearType(typ string) string {
-	t := strings.TrimLeft(typ, "*")
-	t = strings.TrimLeft(t, "[]")
+	t := strings.TrimLeft(typ, " .[]*")
+	fmt.Println("trim:", typ, "->", t)
 	return t
 }
 
 func isUserDefType(typ string) bool {
 	t := clearType(typ)
-	if strings.HasPrefix(t, "map[") == false {
-		_, ok := typs[t]
-		if !ok {
-			pickImport(t)
-		}
-		return ok
-	} else {
-		//map[type1]type2
-		typs := strings.SplitN(t[4:], "]", 2)
-		for _, t1 := range typs {
-			if isUserDefType(t1) == true {
-				return true
-			}
-		}
-		return false
+	_, ok := typs[t]
+	if !ok {
+		pickImport(t)
 	}
+	return ok
+
 }
 
 func pickImport(typ string) {
