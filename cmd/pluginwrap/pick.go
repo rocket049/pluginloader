@@ -129,6 +129,11 @@ func clearType(typ string) string {
 	if n > -1 {
 		t = t[n+1:]
 	}
+	n = strings.Index(t, "[]")
+	if n > -1 {
+		t = t[n+2:]
+		fmt.Println("[]", t)
+	}
 	n = strings.Index(t, " ")
 	if n > -1 {
 		t = t[n+1:]
