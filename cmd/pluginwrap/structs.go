@@ -130,12 +130,16 @@ type resFunc struct {
 const fnTpl = `
 import "github.com/rocket049/pluginloader"
 
-{{range .funcs}}var {{.Name}} {{.Typ}}
-{{end}}
+type {{.pkg}}Funcs struct{
+	{{range .funcs}}{{.Name}} {{.Typ}}
+	{{end}}
+}
 
-func Init{{.pkg}}Funcs(p *pluginloader.PluginLoader) {
-{{range .funcs}}	p.MakeFunc(&{{.Name}}, "{{.Name}}")
+func Get{{.pkg}}Funcs(p *pluginloader.PluginLoader) *{{.pkg}}Funcs{
+	res:= new({{.pkg}}Funcs)
+{{range .funcs}}	p.MakeFunc(&res.{{.Name}}, "{{.Name}}")
 {{end}}
+	return res
 }
 `
 const impTpl = `

@@ -13,18 +13,18 @@ func TestPlugin(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	InitfooFuncs(p)
+	f := GetfooFuncs(p)
 
 	t.Log("call func Help:")
-	res, err := Help("help friend")
+	res, err := f.Help("help friend")
 	t.Log(res, err)
 
 	t.Log("call func GetTime:")
-	tm := GetTime()
+	tm := f.GetTime()
 	t.Log(tm)
 
 	t.Log("call func Bar:")
-	Bar()
+	f.Bar()
 
 	iface, err := p.Call("NewMan")
 	if err != nil {
@@ -51,16 +51,16 @@ func TestPlugin(t *testing.T) {
 	t.Log("call little.Hello:")
 	lit.Hello()
 
-	if GetRenterer(nil) != nil {
+	if f.GetRenterer(nil) != nil {
 		t.Fatal("err GetRenterer")
 	}
 
-	tm1 := GetTime()
+	tm1 := f.GetTime()
 	if tm1.Unix() < time.Now().Unix() {
 		t.Fatal("err GetTime")
 	}
 
-	vi := GetArray()
+	vi := f.GetArray()
 	for i := 0; i < 3; i++ {
 		if vi[i] != i+1 {
 			t.Fatal("err GetArray")
@@ -69,8 +69,14 @@ func TestPlugin(t *testing.T) {
 }
 
 func BenchmarkWrap(b *testing.B) {
+	p, err := pluginloader.NewPluginLoader("foo.so")
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	f := GetfooFuncs(p)
 	for i := 0; i < b.N; i++ {
-		r1, r2 := SwapInt(i, i+10)
+		r1, r2 := f.SwapInt(i, i+10)
 		b.Log(r1, r2)
 	}
 }
