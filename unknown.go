@@ -4,18 +4,26 @@ import (
 	"reflect"
 )
 
+//UnknownObject field 'V' MUST be valueof object type *struct{...}
+//成员'V' 必须是结构体指针的 Value: *struct{...}
 type UnknownObject struct {
 	V reflect.Value
 }
 
+//NewUnknownObject parameter 'v' MUST be valueof object type *struct{...}
+//参数'v' 必须是结构体指针的 Value: *struct{...}
 func NewUnknownObject(v reflect.Value) *UnknownObject {
 	return &UnknownObject{v}
 }
 
+//Get 得到结构体成员的 Value
+//get the value of a field
 func (s *UnknownObject) Get(name string) reflect.Value {
 	return s.V.Elem().FieldByName(name)
 }
 
+//Call 运行结构体的 method
+//call the method of the struct
 func (s *UnknownObject) Call(fn string, args ...interface{}) []reflect.Value {
 	f := s.V.MethodByName(fn)
 	argn := len(args)
