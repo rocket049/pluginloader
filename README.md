@@ -108,15 +108,16 @@ If there is 0 or 1 return value,the `error` return from `Call` is always `nil`.
 The func called can return any number values, return type: ([]reflect.Value,error)
 
 ### 命令行工具 pluginwrap
-本程序用于从源代码生成`plugin`中的可导出结构体的接口(`interface`)，以便用于类型断言。
+本程序用于从`plugin`源代码生成:
 
-use this program convert export structs to interface, in order to type assert.
+1. 可导出结构体的接口(`interface`)，以便用于类型断言。 convert export structs to interface, in order to type assert.
+2. 包装可调用的函数。 Wrap funcs.
 
-安装(install)：
+#### 安装(install)：
 
 `go get github.com/rocket049/pluginloader/cmd/pluginwrap`
 
-用法（usage）：
+#### 用法（usage）：
 
 `pluginwrap path/to/plugin/dir`
 
