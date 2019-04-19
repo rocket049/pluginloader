@@ -1,3 +1,8 @@
+20190419-2 update pluginwrap: delete InitxxxFuncs , add `func GetxxxFuncs(p *pluginloader.PluginLoader) *xxxFuncs` ,avoid namespace conflict.
+修改 pluginwrap ，删除生成的文件中的 `InitxxxFuncs`，改为：`func GetxxxFuncs(p *pluginloader.PluginLoader) *xxxFuncs`，
+函数都被包含在 `xxxFuncs`结构体中避免命名冲突。
+
+### 说明
 本程序用于从源代码生成`plugin`中的导出结构体的接口(`interface`)，以便用于类型断言，以及对函数和方法进行包装。
 函数、方法的返回值、参数类型不能是用户自定义类型。
 pluginwrap几乎已经完美了！
@@ -15,9 +20,7 @@ It can deal with all types import from packages, except User Defined types in ma
 
 *If you must export self defined type, please put the code in a package can be imported by others.*
 
-
-
-安装(install)：
+#### 安装(install)：
 
 go get github.com/rocket049/pluginloader/cmd/pluginwrap
 
@@ -48,12 +51,16 @@ dirWrap.go
 #### 使用`func`
 
 ```
+	//2090419 new
 	p, err := pluginloader.NewPluginLoader("foo.so")
 	if err != nil {
 		panic(err)
 	}
 	
-	// MUST call InitxxxFuncs(p) before call funcs, xxx = plugin名字
-	InitfooFuncs(p)
-	// use funcs in plugin foo
+	// MUST call GetxxxFuncs(p) before call funcs, xxx = plugin名字
+	funcs := GetfooFuncs(p)
+	
+	// call methods in plugin foo
+	funcs.Method(arg)
+	
 ```

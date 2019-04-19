@@ -3,6 +3,10 @@
 
 ### ChangeLog
 
+20190419-2 update pluginwrap: delete InitxxxFuncs , add `func GetxxxFuncs(p *pluginloader.PluginLoader) *xxxFuncs` ,avoid namespace conflict.
+修改 pluginwrap ，删除生成的文件中的 `InitxxxFuncs`，改为：`func GetxxxFuncs(p *pluginloader.PluginLoader) *xxxFuncs`，
+函数都被包含在 `xxxFuncs`结构体中避免命名冲突。
+
 20190419 新增用于调用未定义结构体的对象：`UnknownObject`。 can use undefined object.
 
 20190418 pluginwrap is almost perfect now! pluginwrap几乎已经完美了！
