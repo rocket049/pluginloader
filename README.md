@@ -3,7 +3,7 @@
 
 ### ChangeLog
 
-20190419 新增用于调用为定义结构体的对象：`UnknownObject`。 can use undefined object.
+20190419 新增用于调用未定义结构体的对象：`UnknownObject`。 can use undefined object.
 
 20190418 pluginwrap is almost perfect now! pluginwrap几乎已经完美了！
 现在除了用户自定义类型，已经可以使用所有被导入库的类型。
