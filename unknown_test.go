@@ -2,6 +2,7 @@ package pluginloader
 
 import (
 	"os/exec"
+	"reflect"
 	"testing"
 )
 
@@ -10,6 +11,24 @@ func buildFoo() {
 	err := cmd.Run()
 	if err != nil {
 		panic(err)
+	}
+}
+
+type testStruct struct{}
+type typeNotStruct int
+
+func TestMatchStructPtr(t *testing.T) {
+	p1 := new(testStruct)
+	p2 := new(typeNotStruct)
+	if NewUnknownObject(reflect.ValueOf(p1)) == nil {
+		t.Fatal("NewUnknownObject struct ptr")
+	}
+	if NewUnknownObject(reflect.ValueOf(p2)) != nil {
+		t.Fatal("NewUnknownObject Not struct ptr")
+	}
+
+	if NewUnknownObject(reflect.ValueOf(*p1)) != nil {
+		t.Fatal("NewUnknownObject struct")
 	}
 }
 

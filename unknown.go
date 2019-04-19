@@ -10,9 +10,15 @@ type UnknownObject struct {
 	V reflect.Value
 }
 
-//NewUnknownObject parameter 'v' MUST be valueof object type *struct{...}
-//参数'v' 必须是结构体指针的 Value: *struct{...}
+//NewUnknownObject parameter 'v' MUST be valueof object type *struct{...}, or it will return nil
+//参数'v' 必须是结构体指针的 Value: *struct{...}， 否则返回 nil
 func NewUnknownObject(v reflect.Value) *UnknownObject {
+	if v.Type().Kind() != reflect.Ptr {
+		return nil
+	}
+	if v.Type().Elem().Kind() != reflect.Struct {
+		return nil
+	}
 	return &UnknownObject{v}
 }
 
