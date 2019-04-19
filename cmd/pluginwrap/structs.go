@@ -98,12 +98,14 @@ func saveIdents(name string) {
 	for _, v := range importsPicked {
 		vimports = append(vimports, v)
 	}
+	t := template.New("")
+	t.Parse(impTpl)
+	t.Execute(fp, vimports)
 	data := make(map[string]interface{})
-	data["imports"] = vimports
 	data["pkg"] = pkgName
 	data["funcs"] = afunc
 	if len(afunc) > 0 {
-		t := template.New("")
+		t = template.New("")
 		t.Parse(fnTpl)
 		t.Execute(fp, data)
 	}
@@ -126,11 +128,8 @@ type resFunc struct {
 }
 
 const fnTpl = `
-import (
-	{{range .imports}}{{.}}
-	{{end}}
-	"github.com/rocket049/pluginloader"
-)
+import "github.com/rocket049/pluginloader"
+
 {{range .funcs}}var {{.Name}} {{.Typ}}
 {{end}}
 
@@ -138,4 +137,10 @@ func Init{{.pkg}}Funcs(p *pluginloader.PluginLoader) {
 {{range .funcs}}	p.MakeFunc(&{{.Name}}, "{{.Name}}")
 {{end}}
 }
+`
+const impTpl = `
+import (
+	{{range .}}{{.}}
+	{{end}}
+)
 `
