@@ -88,10 +88,6 @@ func saveIdents(name string) {
 	pkgName := name[:len(name)-7]
 	w := fmt.Sprintf("package main\n\n")
 	fp.WriteString(w)
-	if len(funcs) > 0 {
-		w = fmt.Sprintf("import \"github.com/rocket049/pluginloader\"\n\n")
-		fp.WriteString(w)
-	}
 
 	afunc := []resFunc{}
 	for fn, f := range funcs {
@@ -133,6 +129,7 @@ const fnTpl = `
 import (
 	{{range .imports}}{{.}}
 	{{end}}
+	"github.com/rocket049/pluginloader"
 )
 {{range .funcs}}var {{.Name}} {{.Typ}}
 {{end}}
