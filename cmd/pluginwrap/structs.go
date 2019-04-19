@@ -106,9 +106,11 @@ func saveIdents(name string) {
 	data["imports"] = vimports
 	data["pkg"] = pkgName
 	data["funcs"] = afunc
-	t := template.New("")
-	t.Parse(fnTpl)
-	t.Execute(fp, data)
+	if len(afunc) > 0 {
+		t := template.New("")
+		t.Parse(fnTpl)
+		t.Execute(fp, data)
+	}
 
 	for name, ms := range structs {
 		w = fmt.Sprintf("type I%s interface {\n", name)
