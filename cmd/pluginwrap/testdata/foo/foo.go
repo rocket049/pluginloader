@@ -8,7 +8,9 @@ import (
 	md "github.com/russross/blackfriday"
 )
 
-type Foo struct{}
+type Foo struct {
+	Id int
+}
 
 //Say say something
 func (s *Foo) Say(s1 string) (string, error) {
@@ -22,8 +24,9 @@ func (s *Foo) Hi(s1 string) *Foo {
 	return s
 }
 
-func (s *Foo) Set(p *Foo) {
-	fmt.Println("Foo.Set", time.Now())
+func (s *Foo) Set(p *Foo) bool {
+	fmt.Println("Foo.Set", p, time.Now())
+	return true
 }
 
 func (s *Foo) Swap(p *Foo) {
@@ -31,7 +34,7 @@ func (s *Foo) Swap(p *Foo) {
 }
 
 func NewFoo() *Foo {
-	return new(Foo)
+	return &Foo{100}
 }
 
 func GoFoo(p *Foo) error {
@@ -39,7 +42,10 @@ func GoFoo(p *Foo) error {
 	return nil
 }
 
-func Hello(m ...*Man) {
+func Hello(m []*Man) {
+	fmt.Println(time.Now())
+}
+func Hello2(m ...string) {
 	fmt.Println(time.Now())
 }
 

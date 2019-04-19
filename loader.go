@@ -20,7 +20,11 @@ func (p *PluginLoader) CallValue(funcName string, p0 ...interface{}) ([]reflect.
 	pnum := len(p0)
 	param := make([]reflect.Value, pnum)
 	for i := 0; i < pnum; i++ {
-		param[i] = reflect.ValueOf(p0[i])
+		if p0[i] == nil {
+			param[i] = reflect.Zero(f1.Type().In(i))
+		} else {
+			param[i] = reflect.ValueOf(p0[i])
+		}
 	}
 	return f1.Call(param), nil
 }
@@ -35,7 +39,11 @@ func (p *PluginLoader) Call(funcName string, p0 ...interface{}) (interface{}, er
 	pnum := len(p0)
 	param := make([]reflect.Value, pnum)
 	for i := 0; i < pnum; i++ {
-		param[i] = reflect.ValueOf(p0[i])
+		if p0[i] == nil {
+			param[i] = reflect.Zero(f1.Type().In(i))
+		} else {
+			param[i] = reflect.ValueOf(p0[i])
+		}
 	}
 	res := f1.Call(param)
 	if res == nil {
