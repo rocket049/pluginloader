@@ -24,13 +24,13 @@ func (s *Foo) Hi(s1 string) *Foo {
 	return s
 }
 
-func (s *Foo) Set(p *Foo) bool {
+func (s *Foo) Set(p *os.File) bool {
 	fmt.Println("Foo.Set", p, time.Now())
 	return true
 }
 
 func (s *Foo) Swap(p *Foo) {
-	fmt.Println("Foo.Set", time.Now())
+	fmt.Println("Foo.Swap", time.Now())
 }
 
 func NewFoo() *Foo {

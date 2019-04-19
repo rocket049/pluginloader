@@ -41,6 +41,7 @@ func TestPlugin(t *testing.T) {
 	foo := iface.(IFoo)
 	t.Log("call foo.Say:")
 	foo.Say("hello")
+	foo.Set(nil)
 
 	iface, err = p.Call("NewLittle")
 	if err != nil {
