@@ -3,6 +3,8 @@
 
 ### ChangeLog
 
+20190419 新增用于调用为定义结构体的对象：`UnknownObject`。 can use undefined object.
+
 20190418 pluginwrap is almost perfect now! pluginwrap几乎已经完美了！
 现在除了用户自定义类型，已经可以使用所有被导入库的类型。
 It can deal with all types import from packages, except User Defined types in main.
@@ -31,6 +33,25 @@ func (p *PluginLoader) CallValue(funcName string, p0 ...interface{}) ([]reflect.
 
 //MakeFunc point a func ptr to plugin
 func (s *PluginLoader) MakeFunc(fptr interface{}, name string) error 
+
+
+//20190419 new
+//UnknownObject field 'V' MUST be valueof object type *struct{...}
+//成员'V' 必须是结构体指针的 Value: *struct{...}
+type UnknownObject struct {
+	V reflect.Value
+}
+//NewUnknownObject parameter 'v' MUST be valueof object type *struct{...}
+//参数'v' 必须是结构体指针的 Value: *struct{...}
+func NewUnknownObject(v reflect.Value) *UnknownObject 
+
+//Get 得到结构体成员的 Value
+//get the value of a field
+func (s *UnknownObject) Get(name string) reflect.Value
+
+//Call 运行结构体的 method
+//call the method of the struct
+func (s *UnknownObject) Call(fn string, args ...interface{}) []reflect.Value
 ```
 
 ### 用法（usage）:
@@ -52,6 +73,17 @@ ret := p.CallValue("NameOfFunc", p0,p1,p3,...)
 var Foo func(arg string)(string,error)
 p.MakeFunc(&Foo,"Foo")
 //call Foo(something)
+
+// Use UnknownObject. NewFoo return 'foo *Foo'
+v, err := p.CallValue("NewFoo")
+if err != nil {
+	t.Fatal(err)
+}
+obj := NewUnknownObject(v[0])
+
+id: = obj.Get("Id").Int()
+
+err = obj.Call("Set", nil)
 
 ```
 
