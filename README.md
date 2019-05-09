@@ -56,6 +56,12 @@ func (s *UnknownObject) Get(name string) reflect.Value
 //Call 运行结构体的 method
 //call the method of the struct
 func (s *UnknownObject) Call(fn string, args ...interface{}) []reflect.Value
+
+//Json 把结构体编码为 JSON。 convert the struct to JSON. if error,retur nil.
+func (s *UnknownObject) Json() []byte
+
+//CopyToStruct 利用 gob 编码技术把结构体的值复制到 v 中，v 必须是相似结构体的指针。 copy the value of the struct to v through gob encoding.
+func (s *UnknownObject) CopyToStruct(v interface{}) error
 ```
 
 ### 用法（usage）:

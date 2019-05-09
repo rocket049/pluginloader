@@ -47,7 +47,7 @@ func (s *UnknownObject) Call(fn string, args ...interface{}) []reflect.Value {
 	return f.Call(argv)
 }
 
-//Json 把结构体编码为 JSON。 convert the struct to JSON
+//Json 把结构体编码为 JSON。 convert the struct to JSON. if error,retur nil.
 func (s *UnknownObject) Json() []byte {
 	res, err := json.Marshal(s.V.Interface())
 	if err != nil {
@@ -56,7 +56,7 @@ func (s *UnknownObject) Json() []byte {
 	return res
 }
 
-//CopyToStruct 利用 gob 编码技术把结构体的值复制到 v 中，v 必须是相似结构体的指针。 copy the value of the struct to v through gob encoding.
+//CopyToStruct 利用 gob 编码技术把结构体的值复制到 v 中，v 必须是相似结构体的指针。 copy the value of a struct to v through gob encoding.
 func (s *UnknownObject) CopyToStruct(v interface{}) error {
 	buf := bytes.NewBufferString("")
 	encoder := gob.NewEncoder(buf)
