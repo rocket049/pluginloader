@@ -47,7 +47,7 @@ func (s *UnknownObject) Call(fn string, args ...interface{}) []reflect.Value {
 	return f.Call(argv)
 }
 
-//Json 把结构体编码为 JSON。 convert the struct to JSON. if error,retur nil.
+//Json 把结构体编码为 JSON。 convert the struct to JSON. if error,return nil.
 func (s *UnknownObject) Json() []byte {
 	res, err := json.Marshal(s.V.Interface())
 	if err != nil {
