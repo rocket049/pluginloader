@@ -14,7 +14,9 @@ func buildFoo() {
 	}
 }
 
-type testStruct struct{}
+type testStruct struct {
+	ID int32
+}
 type typeNotStruct int
 
 func TestMatchStructPtr(t *testing.T) {
@@ -49,5 +51,36 @@ func TestUnknown(t *testing.T) {
 	ret := obj.Call("Set", nil)
 	if ret[0].Bool() != true {
 		t.Fatal("call foo.Set")
+	}
+}
+
+func TestJson(t *testing.T) {
+	v := &testStruct{ID: 100}
+	obj := NewUnknownObject(reflect.ValueOf(v))
+	if obj == nil {
+		t.Fatal("NewUnknownObject struct ptr")
+	}
+	json1 := obj.Json()
+	if json1 == nil {
+		t.Fatal("Json error")
+	} else {
+		t.Log(string(json1))
+	}
+}
+
+func TestCopy(t *testing.T) {
+	v := &testStruct{ID: 101}
+	obj := NewUnknownObject(reflect.ValueOf(v))
+	if obj == nil {
+		t.Fatal("NewUnknownObject struct ptr")
+	}
+	p := &struct {
+		ID int
+	}{}
+	err := obj.CopyToStruct(p)
+	if err != nil {
+		t.Fatal(err)
+	} else {
+		t.Logf("%#v\n", *p)
 	}
 }

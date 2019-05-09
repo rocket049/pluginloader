@@ -1,6 +1,9 @@
 package pluginloader
 
 import (
+	"bytes"
+	"encoding/gob"
+	"encoding/json"
 	"reflect"
 )
 
@@ -42,4 +45,27 @@ func (s *UnknownObject) Call(fn string, args ...interface{}) []reflect.Value {
 		}
 	}
 	return f.Call(argv)
+}
+
+//Json 把结构体编码为 JSON。 convert the struct to JSON
+func (s *UnknownObject) Json() []byte {
+	res, err := json.Marshal(s.V.Interface())
+	if err != nil {
+		return nil
+	}
+	return res
+}
+
+//CopyToStruct 利用 gob 编码技术把结构体的值复制到 v 中，v 必须是相似结构体的指针。 copy the value of the struct to v through gob encoding.
+func (s *UnknownObject) CopyToStruct(v interface{}) error {
+	buf := bytes.NewBufferString("")
+	encoder := gob.NewEncoder(buf)
+	err := encoder.Encode(s.V.Interface())
+	if err != nil {
+		return err
+	}
+	reader := bytes.NewReader(buf.Bytes())
+	decoder := gob.NewDecoder(reader)
+	err = decoder.Decode(v)
+	return err
 }
