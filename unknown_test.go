@@ -55,8 +55,16 @@ func TestUnknown(t *testing.T) {
 }
 
 func TestJson(t *testing.T) {
-	v := &testStruct{ID: 100}
-	obj := NewUnknownObject(reflect.ValueOf(v))
+	buildFoo()
+	p, err := NewPluginLoader("foo.so")
+	if err != nil {
+		t.Fatal(err)
+	}
+	v, err := p.CallValue("NewFoo")
+	if err != nil {
+		t.Fatal(err)
+	}
+	obj := NewUnknownObject(v[0])
 	if obj == nil {
 		t.Fatal("NewUnknownObject struct ptr")
 	}
@@ -69,18 +77,26 @@ func TestJson(t *testing.T) {
 }
 
 func TestCopy(t *testing.T) {
-	v := &testStruct{ID: 101}
-	obj := NewUnknownObject(reflect.ValueOf(v))
+	buildFoo()
+	p, err := NewPluginLoader("foo.so")
+	if err != nil {
+		t.Fatal(err)
+	}
+	v, err := p.CallValue("NewFoo")
+	if err != nil {
+		t.Fatal(err)
+	}
+	obj := NewUnknownObject(v[0])
 	if obj == nil {
 		t.Fatal("NewUnknownObject struct ptr")
 	}
-	p := &struct {
-		ID int
+	pv := &struct {
+		Id int
 	}{}
-	err := obj.CopyToStruct(p)
+	err = obj.CopyToStruct(pv)
 	if err != nil {
 		t.Fatal(err)
 	} else {
-		t.Logf("%#v\n", *p)
+		t.Logf("%#v\n", *pv)
 	}
 }
