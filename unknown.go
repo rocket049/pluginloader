@@ -24,6 +24,19 @@ func NewUnknownObject(v reflect.Value) *UnknownObject {
 	return &UnknownObject{v}
 }
 
+//NewUnknownObjectFromInterface parameter 'p' MUST be pointer of struct type, or it will return nil
+//参数'p' 必须是结构体指针， 否则返回 nil
+func NewUnknownObjectFromInterface(p interface{}) *UnknownObject {
+	v := reflect.ValueOf(p)
+	if v.Type().Kind() != reflect.Ptr {
+		return nil
+	}
+	if v.Type().Elem().Kind() != reflect.Struct {
+		return nil
+	}
+	return &UnknownObject{v}
+}
+
 //Get 得到结构体成员的 Value
 //get the value of a field
 func (s *UnknownObject) Get(name string) reflect.Value {
