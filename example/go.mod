@@ -1,5 +1,5 @@
-module main
+module pluginloader1
 
-go 1.12
+go 1.13
 
-require github.com/rocket049/pluginloader v0.0.0-20190318071737-b721fd685f7f // indirect
+require github.com/rocket049/pluginloader v1.0.11

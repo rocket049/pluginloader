@@ -1,3 +1,0 @@
-go build -buildmode=plugin plugin1.go
-go build main.go
-./main ./plugin1.so
