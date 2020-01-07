@@ -12,11 +12,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	a, err := p.Call("NewObjType", "Boy")
+	a, err := p.CallValue("NewObjType", "Boy")
 	if err != nil {
 		panic(err)
 	}
-	ua := pluginloader.NewUnknownObjectFromInterface(a)
+	ua := pluginloader.NewUnknownObject(a[0])
 	ua.Call("Say", "Hello friends!")
 	ua.Call("SaySuccess")
 }
