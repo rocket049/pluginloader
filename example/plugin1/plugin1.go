@@ -13,6 +13,10 @@ func (p *ObjType) Say(s string) int {
 	return len(s)
 }
 
+func (p *ObjType) SaySuccess() {
+	fmt.Printf("%s say: Plugin successful loaded!\n", p.name)
+}
+
 func NewObjType(name string) *ObjType {
 	return &ObjType{name}
 }

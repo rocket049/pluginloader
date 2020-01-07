@@ -17,5 +17,6 @@ func main() {
 		panic(err)
 	}
 	ua := pluginloader.NewUnknownObjectFromInterface(a)
-	ua.Call("Say", "Hello friends! Plugin successful loaded!")
+	ua.Call("Say", "Hello friends!")
+	ua.Call("SaySuccess")
 }
